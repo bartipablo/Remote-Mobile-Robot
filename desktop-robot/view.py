@@ -1,5 +1,4 @@
 import tkinter as tk
-from controller import Controller
 
 
 class MainView(tk.Tk):
@@ -7,7 +6,6 @@ class MainView(tk.Tk):
         super().__init__()
 
         self.robot = robot
-        self.controller = Controller(self, robot)
 
         self.key_labels = {}
         self.signal_bar_labels = {}
@@ -217,14 +215,14 @@ class MainView(tk.Tk):
             label = self.key_labels[event.keysym]
             self.__update_key_label(label, pressed=True)
             self.pressed_keys.add(event.keysym)
-            self.controller.pressed_keys_handler(self.pressed_keys)
+            self.__pressed_keys_handler(self.pressed_keys)
         else:
             pressed_char = event.char.upper()
             if pressed_char in self.key_labels:
                 label = self.key_labels[pressed_char]
                 self.__update_key_label(label, pressed=True)
                 self.pressed_keys.add(pressed_char)
-                self.controller.pressed_keys_handler(self.pressed_keys)
+                self.__pressed_keys_handler(self.pressed_keys)
 
     def __on_key_release(self, event):
         if event.keysym in self.key_labels:
@@ -237,6 +235,56 @@ class MainView(tk.Tk):
                 label = self.key_labels[pressed_char]
                 self.__update_key_label(label, pressed=False)
                 self.pressed_keys.remove(pressed_char)
+
+    def __pressed_keys_handler(self, pressed_keys):
+        if 'H' in pressed_keys:
+            print("PRESSED H")
+        if 'L' in pressed_keys:
+            print("PRESSED L")
+
+        if 'Up' in pressed_keys:
+            self.robot.speed_up()
+            self.update_speed_label(self.robot.get_speed())
+
+        elif 'Down' in pressed_keys:
+            self.robot.speed_down()
+            self.update_speed_label(self.robot.get_speed())
+
+        if 'W' in pressed_keys and 'A' in pressed_keys:
+            print("PRESSED W and A")
+
+        elif 'W' in pressed_keys and 'D' in pressed_keys:
+            print("PRESSED W and D")
+
+        elif 'S' in pressed_keys and 'A' in pressed_keys:
+            print("PRESSED S and A")
+
+        elif 'S' in pressed_keys and 'D' in pressed_keys:
+            print("PRESSED S and D")
+
+        elif 'W' in pressed_keys and 'S' in pressed_keys:
+            print("PRESSED W and S")
+
+        elif 'W' in pressed_keys:
+            print("PRESSED W")
+
+        elif 'A' in pressed_keys:
+            print("PRESSED A")
+
+        elif 'S' in pressed_keys:
+            print("PRESSED S")
+
+        elif 'D' in pressed_keys:
+            print("PRESSED D")
+
+        elif 'Left' in pressed_keys and 'Right' in pressed_keys:
+            print("PRESSED LEFT and RIGHT")
+
+        elif 'Left' in pressed_keys:
+            print("PRESSED LEFT")
+
+        elif 'Right' in pressed_keys:
+            print("PRESSED RIGHT")
 
 
 def make_button_label(key, parent):
