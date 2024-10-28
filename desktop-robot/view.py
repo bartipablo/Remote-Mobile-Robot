@@ -20,7 +20,9 @@ class MainView(tk.Tk):
 
         self.__draw_manual()
         self.__draw_state()
-        self.__scheduler()
+
+        self.__signal_scheduler()
+        self.__battery_scheduler()
 
         self.bind("<KeyPress>", self.__on_key_press)
         self.bind("<KeyRelease>", self.__on_key_release)
@@ -28,10 +30,13 @@ class MainView(tk.Tk):
     def update_speed_label(self, speed):
         self.speed_label.config(text=str(speed))
 
-
-    def __scheduler(self):
+    def __signal_scheduler(self):
         self.__update_signal_strength()
-        self.after(1000, self.__scheduler)
+        self.after(1000, self.__signal_scheduler)
+
+    def __battery_scheduler(self):
+        self.__update_battery_lvl()
+        self.after(15000, self.__battery_scheduler)
 
     def __update_signal_strength(self):
         def update_signal_bar(color):
@@ -45,17 +50,41 @@ class MainView(tk.Tk):
                 update_signal_bar("#555555")
         else:
             update_signal_bar("white")
-            if signal_strength >= -50: #Excellent (-30 to -50 dBm)
+            if signal_strength >= -50:  # Excellent (-30 to -50 dBm)
                 self.signal_bar_labels[5].config(bg="green")
-            if signal_strength >= -60: #Very good (-51 to -60 dBm)
+            if signal_strength >= -60:  # Very good (-51 to -60 dBm)
                 self.signal_bar_labels[4].config(bg="green")
-            if signal_strength >= -70: #Good (-61 to -70 dBm)
+            if signal_strength >= -70:  # Good (-61 to -70 dBm)
                 self.signal_bar_labels[3].config(bg="green")
-            if signal_strength >= -80: #Poor (-71 to -80 dBm)
+            if signal_strength >= -80:  # Poor (-71 to -80 dBm)
                 self.signal_bar_labels[2].config(bg="green")
                 self.signal_bar_labels[1].config(bg="green")
             if signal_strength <= -81:
                 self.signal_bar_labels[1].config(bg="red")
+
+    def __update_battery_lvl(self):
+        def update_battery_bar(color):
+            for i in range(1, 6):
+                self.battery_bar_labels[i].config(bg=color)
+
+        battery_lvl = self.robot.get_battery_lvl()
+
+        if battery_lvl is None:
+            for i in range(1, 6):
+                update_battery_bar("#555555")
+        else:
+            update_battery_bar("white")
+            if battery_lvl >= 80:
+                self.battery_bar_labels[5].config(bg="green")
+            if battery_lvl >= 60:
+                self.battery_bar_labels[4].config(bg="green")
+            if battery_lvl >= 40:
+                self.battery_bar_labels[3].config(bg="green")
+            if battery_lvl >= 20:
+                self.battery_bar_labels[2].config(bg="green")
+                self.battery_bar_labels[1].config(bg="green")
+            if battery_lvl < 20:
+                self.battery_bar_labels[1].config(bg="red")
 
     def __draw_manual(self):
         manual_frame = tk.Frame(self, width=250, height=600, bg="#343036")
@@ -174,7 +203,6 @@ class MainView(tk.Tk):
         for i in range(1, 6):
             self.signal_bar_labels[i] = make_signal_bar_label(signal_strength_frame, i)
             self.signal_bar_labels[i].grid(row=0, column=i, padx=2, pady=5, sticky='s')
-        self.__update_signal_strength()
 
     def __draw_battery_level(self, frame):
         def make_battery_bar_label(parent):
@@ -184,7 +212,7 @@ class MainView(tk.Tk):
             )
 
         battery_level_label = tk.Label(frame, text="Battery level:", font=("Arial", 14, "bold"), fg="white",
-                                         bg="#343036")
+                                       bg="#343036")
         battery_level_label.pack(pady=10, padx=10)
 
         battery_level_frame = tk.Frame(frame, bg="#343036")
@@ -292,7 +320,3 @@ def make_button_label(key, parent):
         parent, text=key, font=("Arial", 16, "bold"), fg="white", bg="#555555",
         width=4, height=2, relief="raised", borderwidth=2
     )
-
-if __name__ == "__main__":
-    app = MainView()
-    app.mainloop()

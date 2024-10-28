@@ -3,7 +3,7 @@ from wifi import get_wifi_signal_strength
 
 class Robot:
     def __init__(self):
-        self.__battery_lvl = None
+        self.__battery_lvl = 19
         self.__speed = 1
 
     def set_battery_lvl(self, battery_lvl):
