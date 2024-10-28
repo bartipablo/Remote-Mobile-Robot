@@ -1,47 +1,55 @@
-def pressed_keys_handler(pressed_keys):
-    if 'H' in pressed_keys:
-        print("PRESSED H")
-    if 'L' in pressed_keys:
-        print("PRESSED L")
+class Controller:
+    def __init__(self, view, robot):
+        self.view = view
+        self.robot = robot
 
-    if 'Up' in pressed_keys:
-        print("PRESSED UP")
-    elif 'Down' in pressed_keys:
-        print("PRESSED DOWN")
+    def pressed_keys_handler(self, pressed_keys):
+        if 'H' in pressed_keys:
+            print("PRESSED H")
+        if 'L' in pressed_keys:
+            print("PRESSED L")
 
-    if 'W' in pressed_keys and 'A' in pressed_keys:
-        print("PRESSED W and A")
+        if 'Up' in pressed_keys:
+            self.robot.speed_up()
+            self.view.update_speed_label(self.robot.get_speed())
 
-    elif 'W' in pressed_keys and 'D' in pressed_keys:
-        print("PRESSED W and D")
+        elif 'Down' in pressed_keys:
+            self.robot.speed_down()
+            self.view.update_speed_label(self.robot.get_speed())
 
-    elif 'S' in pressed_keys and 'A' in pressed_keys:
-        print("PRESSED S and A")
+        if 'W' in pressed_keys and 'A' in pressed_keys:
+            print("PRESSED W and A")
 
-    elif 'S' in pressed_keys and 'D' in pressed_keys:
-        print("PRESSED S and D")
+        elif 'W' in pressed_keys and 'D' in pressed_keys:
+            print("PRESSED W and D")
 
-    elif 'W' in pressed_keys and 'S' in pressed_keys:
-        print("PRESSED W and S")
+        elif 'S' in pressed_keys and 'A' in pressed_keys:
+            print("PRESSED S and A")
 
-    elif 'W' in pressed_keys:
-        print("PRESSED W")
+        elif 'S' in pressed_keys and 'D' in pressed_keys:
+            print("PRESSED S and D")
 
-    elif 'A' in pressed_keys:
-        print("PRESSED A")
+        elif 'W' in pressed_keys and 'S' in pressed_keys:
+            print("PRESSED W and S")
 
-    elif 'S' in pressed_keys:
-        print("PRESSED S")
+        elif 'W' in pressed_keys:
+            print("PRESSED W")
 
-    elif 'D' in pressed_keys:
-        print("PRESSED D")
+        elif 'A' in pressed_keys:
+            print("PRESSED A")
 
-    elif 'Left' in pressed_keys and 'Right' in pressed_keys:
-        print("PRESSED LEFT and RIGHT")
+        elif 'S' in pressed_keys:
+            print("PRESSED S")
 
-    elif 'Left' in pressed_keys:
-        print("PRESSED LEFT")
+        elif 'D' in pressed_keys:
+            print("PRESSED D")
 
-    elif 'Right' in pressed_keys:
-        print("PRESSED RIGHT")
+        elif 'Left' in pressed_keys and 'Right' in pressed_keys:
+            print("PRESSED LEFT and RIGHT")
+
+        elif 'Left' in pressed_keys:
+            print("PRESSED LEFT")
+
+        elif 'Right' in pressed_keys:
+            print("PRESSED RIGHT")
 

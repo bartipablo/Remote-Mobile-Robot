@@ -1,6 +1,5 @@
 import tkinter as tk
-from wifi import get_wifi_signal_strength
-import controller as ctrl
+from controller import Controller
 
 
 class MainView(tk.Tk):
@@ -8,6 +7,8 @@ class MainView(tk.Tk):
         super().__init__()
 
         self.robot = robot
+        self.controller = Controller(self, robot)
+
         self.key_labels = {}
         self.signal_bar_labels = {}
         self.battery_bar_labels = {}
@@ -19,13 +20,46 @@ class MainView(tk.Tk):
         self.geometry("1200x600")
         self.configure(bg="#343036")
 
-        self.draw_manual()
-        self.draw_state()
+        self.__draw_manual()
+        self.__draw_state()
+        self.__scheduler()
 
         self.bind("<KeyPress>", self.__on_key_press)
         self.bind("<KeyRelease>", self.__on_key_release)
 
-    def draw_manual(self):
+    def update_speed_label(self, speed):
+        self.speed_label.config(text=str(speed))
+
+
+    def __scheduler(self):
+        self.__update_signal_strength()
+        self.after(1000, self.__scheduler)
+
+    def __update_signal_strength(self):
+        def update_signal_bar(color):
+            for i in range(1, 6):
+                self.signal_bar_labels[i].config(bg=color)
+
+        signal_strength = self.robot.get_signal_strength()
+
+        if signal_strength is None:
+            for i in range(1, 6):
+                update_signal_bar("#555555")
+        else:
+            update_signal_bar("white")
+            if signal_strength >= -50: #Excellent (-30 to -50 dBm)
+                self.signal_bar_labels[5].config(bg="green")
+            if signal_strength >= -60: #Very good (-51 to -60 dBm)
+                self.signal_bar_labels[4].config(bg="green")
+            if signal_strength >= -70: #Good (-61 to -70 dBm)
+                self.signal_bar_labels[3].config(bg="green")
+            if signal_strength >= -80: #Poor (-71 to -80 dBm)
+                self.signal_bar_labels[2].config(bg="green")
+                self.signal_bar_labels[1].config(bg="green")
+            if signal_strength <= -81:
+                self.signal_bar_labels[1].config(bg="red")
+
+    def __draw_manual(self):
         manual_frame = tk.Frame(self, width=250, height=600, bg="#343036")
         manual_frame.pack(side="left", fill="both")
         self.__draw_control_manual(manual_frame)
@@ -117,7 +151,7 @@ class MainView(tk.Tk):
             label.config(bg="#555555")
             label.config(fg="white")
 
-    def draw_state(self):
+    def __draw_state(self):
         state_frame = tk.Frame(self, width=250, height=600, bg="#343036")
         state_frame.pack(side="right", fill="both")
 
@@ -142,6 +176,7 @@ class MainView(tk.Tk):
         for i in range(1, 6):
             self.signal_bar_labels[i] = make_signal_bar_label(signal_strength_frame, i)
             self.signal_bar_labels[i].grid(row=0, column=i, padx=2, pady=5, sticky='s')
+        self.__update_signal_strength()
 
     def __draw_battery_level(self, frame):
         def make_battery_bar_label(parent):
@@ -182,14 +217,14 @@ class MainView(tk.Tk):
             label = self.key_labels[event.keysym]
             self.__update_key_label(label, pressed=True)
             self.pressed_keys.add(event.keysym)
-            ctrl.pressed_keys_handler(self.pressed_keys)
+            self.controller.pressed_keys_handler(self.pressed_keys)
         else:
             pressed_char = event.char.upper()
             if pressed_char in self.key_labels:
                 label = self.key_labels[pressed_char]
                 self.__update_key_label(label, pressed=True)
                 self.pressed_keys.add(pressed_char)
-                ctrl.pressed_keys_handler(self.pressed_keys)
+                self.controller.pressed_keys_handler(self.pressed_keys)
 
     def __on_key_release(self, event):
         if event.keysym in self.key_labels:
