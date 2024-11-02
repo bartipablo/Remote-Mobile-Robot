@@ -8,9 +8,11 @@ from paho.mqtt import client as mqtt
 PORT = 5054
 client_IP_address = None
 
+
 def on_connect(client, userdata, flags, reason_code, properties):
     print(f"Connected to MQTT broker with result code {reason_code}")
-    client.subscribe("robot/camera")
+    client.subscribe("robot/camera", qos=1)
+
 
 def on_message(client, userdata, msg):
     global client_IP_address
@@ -22,12 +24,12 @@ def on_message(client, userdata, msg):
             print(f"Camera is turned on. Client IP address: {msg.payload.decode()}")
             client_IP_address = msg.payload.decode()
 
+
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_connect = on_connect
 mqttc.on_message = on_message
 mqttc.connect("192.168.10.1", 1883, 60)
 mqttc.loop_start()
-
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 picam2 = Picamera2()
