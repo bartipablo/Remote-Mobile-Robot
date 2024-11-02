@@ -4,9 +4,10 @@ from mqtt import initialize_mqtt_connection
 from camera import Camera
 import threading
 
-robot = Robot()
 
 mqttc = initialize_mqtt_connection(lambda message: print(f"Wiadomość: {message}"))
+
+robot = Robot(mqttc)
 
 mqttc.loop_start()
 

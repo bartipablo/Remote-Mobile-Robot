@@ -1,3 +1,4 @@
+import socket
 import subprocess
 import re
 
@@ -11,3 +12,7 @@ def get_wifi_signal_strength():
         return int(match.group(1))
     else:
         return None
+
+
+def get_ip_address():
+    return socket.gethostbyname(socket.gethostname())

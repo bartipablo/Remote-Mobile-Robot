@@ -38,7 +38,7 @@ class MainView(tk.Tk):
         self.speed_label.config(text=str(speed))
 
     def __draw_image_area(self):
-        image_frame = tk.Frame(self, width=650, height=490, bg="white")
+        image_frame = tk.Frame(self, width=650, height=490, bg="black")
         image_frame.pack_propagate(False)
         image_frame.pack()
 
