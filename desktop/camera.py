@@ -31,4 +31,3 @@ class Camera:
             
             if self.callback:
                 self.callback(img)
-        
