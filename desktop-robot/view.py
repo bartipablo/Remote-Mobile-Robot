@@ -1,16 +1,21 @@
 import tkinter as tk
+import cv2
+from PIL import Image, ImageTk
 
 
 class MainView(tk.Tk):
-    def __init__(self, robot):
+    def __init__(self, robot, camera):
         super().__init__()
 
         self.robot = robot
+        self.camera = camera
+        self.camera.set_callback(self.__update_image_area)
 
         self.key_labels = {}
         self.signal_bar_labels = {}
         self.battery_bar_labels = {}
         self.speed_label = None
+        self.image_canvas = None
 
         self.pressed_keys = set()
 
@@ -20,6 +25,8 @@ class MainView(tk.Tk):
 
         self.__draw_manual()
         self.__draw_state()
+        self.__draw_image_area()
+        self.__draw_pause_indicators()
 
         self.__signal_scheduler()
         self.__battery_scheduler()
@@ -29,6 +36,30 @@ class MainView(tk.Tk):
 
     def update_speed_label(self, speed):
         self.speed_label.config(text=str(speed))
+
+    def __draw_image_area(self):
+        image_frame = tk.Frame(self, width=650, height=490, bg="white")
+        image_frame.pack_propagate(False)
+        image_frame.pack()
+
+        self.image_canvas = tk.Canvas(image_frame, width=640, height=480, bg="black")
+        self.image_canvas.pack()
+
+    def __draw_pause_indicators(self):
+        self.image_canvas.create_text(300, 215, text="The camera is off", fill="white", font=("Arial", 16), anchor="center")
+
+    def __clear_image_area(self):
+        self.image_canvas.delete("all")
+
+    def __update_image_area(self, img):
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        img_pil = Image.fromarray(img)
+        img_tk = ImageTk.PhotoImage(img_pil)
+
+        self.image_canvas.create_image(0, 0, anchor="nw", image=img_tk)
+        self.image_canvas.image = img_tk 
+
 
     def __signal_scheduler(self):
         self.__update_signal_strength()
@@ -46,8 +77,7 @@ class MainView(tk.Tk):
         signal_strength = self.robot.get_signal_strength()
 
         if signal_strength is None:
-            for i in range(1, 6):
-                update_signal_bar("#555555")
+            update_signal_bar("#555555")
         else:
             update_signal_bar("white")
             if signal_strength >= -50:  # Excellent (-30 to -50 dBm)
@@ -93,7 +123,7 @@ class MainView(tk.Tk):
         self.__draw_rotation_manual(manual_frame)
         self.__draw_speed_manual(manual_frame)
         self.__draw_play_sound_manual(manual_frame)
-        self.__draw_switch_light_manual(manual_frame)
+        self.__draw_switch_camera_manual(manual_frame)
 
     def __draw_control_manual(self, frame):
         description_label = tk.Label(frame, text="Robot movement", font=("Arial", 14, "bold"), fg="white", bg="#343036")
@@ -159,16 +189,16 @@ class MainView(tk.Tk):
         play_sound_label.grid(row=0, column=0, padx=5, pady=5)
         self.key_labels["H"] = play_sound_label
 
-    def __draw_switch_light_manual(self, frame):
-        description_label = tk.Label(frame, text="Switch light", font=("Arial", 14, "bold"), fg="white", bg="#343036")
+    def __draw_switch_camera_manual(self, frame):
+        description_label = tk.Label(frame, text="Switch on camera", font=("Arial", 14, "bold"), fg="white", bg="#343036")
         description_label.pack(pady=10, padx=10)
 
-        light_frame = tk.Frame(frame, bg="#343036")
-        light_frame.pack(pady=0)
+        camera_frame = tk.Frame(frame, bg="#343036")
+        camera_frame.pack(pady=0)
 
-        switch_light_label = make_button_label("L", light_frame)
-        switch_light_label.grid(row=0, column=0, padx=5, pady=5)
-        self.key_labels["L"] = switch_light_label
+        switch_camera_label = make_button_label("P", camera_frame)
+        switch_camera_label.grid(row=0, column=0, padx=5, pady=5)
+        self.key_labels["P"] = switch_camera_label
 
     def __update_key_label(self, label, pressed):
         if pressed:
@@ -237,6 +267,7 @@ class MainView(tk.Tk):
 
         self.speed_label = tk.Label(speed_frame, text="1", font=("Arial", 20, "bold"), fg="white", bg="#343036")
         self.speed_label.grid(row=0, column=0, padx=5, pady=5)
+        
 
     def __on_key_press(self, event):
         if event.keysym in self.key_labels:
@@ -265,8 +296,13 @@ class MainView(tk.Tk):
                 self.pressed_keys.remove(pressed_char)
 
     def __pressed_keys_handler(self, pressed_keys):
-        if 'H' in pressed_keys:
-            print("PRESSED H")
+        if 'P' in pressed_keys:
+            self.robot.switch_camera()
+            self.__clear_image_area()
+
+            if not self.robot.is_camera_turned_on():
+                self.__draw_pause_indicators()
+
         if 'L' in pressed_keys:
             print("PRESSED L")
 

@@ -5,6 +5,7 @@ class Robot:
     def __init__(self):
         self.__battery_lvl = 19
         self.__speed = 1
+        self.__camera_turned_on = False
 
     def set_battery_lvl(self, battery_lvl):
         if battery_lvl < 0:
@@ -33,3 +34,11 @@ class Robot:
 
     def get_signal_strength(self):
         return get_wifi_signal_strength()
+    
+    def is_camera_turned_on(self):
+        return self.__camera_turned_on
+    
+    def switch_camera(self):
+        self.__camera_turned_on = not self.__camera_turned_on
+
+
