@@ -8,9 +8,7 @@ robot = Robot()
 
 mqttc = initialize_mqtt_connection(lambda message: print(f"Wiadomość: {message}"))
 
-mqtt_thread = threading.Thread(target=mqttc.loop_forever)
-mqtt_thread.daemon = True
-mqtt_thread.start()
+mqttc.loop_start()
 
 camera = Camera(robot, mqttc)
 
