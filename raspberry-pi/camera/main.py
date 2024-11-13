@@ -17,12 +17,23 @@ def on_connect(client, userdata, flags, reason_code, properties):
 def on_message(client, userdata, msg):
     global client_IP_address
     if msg.topic == "robot/camera":
-        if msg.payload.decode() == "disconnect":
-            print("Camera is turned off.")
-            client_IP_address = None
+        payload = msg.payload.decode('utf-8')
+        
+        parts = payload.split('/', 1)
+        if len(parts) != 2:
+            return
+
+        action, ip_address = parts
+
+        if action == "disconnect":
+            print(f"Camera is turned off for ip address: {ip_address}")
+            if client_IP_address == ip_address:
+                client_IP_address = None
+        elif action == "connect":
+            print(f"Camera is turned on. Client IP address: {ip_address}")
+            client_IP_address = ip_address
         else:
-            print(f"Camera is turned on. Client IP address: {msg.payload.decode()}")
-            client_IP_address = msg.payload.decode()
+            print(f"Unknown action: {action}")
 
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)

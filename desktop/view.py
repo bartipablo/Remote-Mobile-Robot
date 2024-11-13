@@ -57,6 +57,8 @@ class MainView(tk.Tk):
         img_pil = Image.fromarray(img)
         img_tk = ImageTk.PhotoImage(img_pil)
 
+        if not self.robot.is_camera_turned_on():
+            return
         self.image_canvas.create_image(0, 0, anchor="nw", image=img_tk)
         self.image_canvas.image = img_tk 
 

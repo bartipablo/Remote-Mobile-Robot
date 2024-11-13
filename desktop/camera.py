@@ -21,7 +21,6 @@ class Camera:
             data, addr = sock.recvfrom(1000000)
 
             if not self.robot.is_camera_turned_on():
-                self.mqttc.publish("robot/camera", "disconnect")
                 continue
 
             img_data = pickle.loads(data)
