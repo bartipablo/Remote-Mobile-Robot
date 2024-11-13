@@ -1,5 +1,5 @@
 from paho.mqtt import client as mqtt
-from conf import RASPBERRYPI5_IP
+from conf import RASPBERRYPI_IPv4
 from utils import get_ip_address
 
 
@@ -17,10 +17,10 @@ def initialize_mqtt_connection(message_callback):
     mqttc.on_disconnect = on_disconnect
     mqttc.on_message = message_callback
 
-    mqttc.will_set("robot/camera", payload=f"disconnect/{get_ip_address()}", qos=1, retain=True)
+    mqttc.will_set("robot/camera/disconnect", payload=get_ip_address(), qos=1, retain=True)
 
     try:
-        mqttc.connect(RASPBERRYPI5_IP, 1883, 60)
+        mqttc.connect(RASPBERRYPI_IPv4, 1883, 60)
     except Exception as e:
         print(f"Cannot connect to MQTT broker.")
         print(f"Details: {e}")

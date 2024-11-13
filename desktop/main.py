@@ -5,7 +5,7 @@ from camera import Camera
 import threading
 
 
-mqttc = initialize_mqtt_connection(lambda message: print(f"Wiadomość: {message}"))
+mqttc = initialize_mqtt_connection(lambda message: print(f"Message: {message}"))
 
 robot = Robot(mqttc)
 

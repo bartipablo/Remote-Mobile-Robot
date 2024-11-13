@@ -1,7 +1,7 @@
 import socket
 import subprocess
 import re
-from conf import RASPBERRYPI5_IP
+from conf import RASPBERRYPI_IPv4
 
 
 def get_wifi_signal_strength():
@@ -17,7 +17,7 @@ def get_wifi_signal_strength():
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect((RASPBERRYPI5_IP, 80))
+    s.connect((RASPBERRYPI_IPv4, 80))
     addr = s.getsockname()[0]
     s.close()
     return addr

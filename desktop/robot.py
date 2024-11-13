@@ -43,8 +43,8 @@ class Robot:
         self.__camera_turned_on = not self.__camera_turned_on
 
         if self.__camera_turned_on:
-            self.mqttc.publish("robot/camera", f"connect/{get_ip_address()}", qos=0)
+            self.mqttc.publish("robot/camera/connect", get_ip_address(), qos=1)
         else:
-            self.mqttc.publish("robot/camera", f"disconnect/{get_ip_address()}", qos=0)
+            self.mqttc.publish("robot/camera/disconnect", get_ip_address(), qos=1)
 
         return self.__camera_turned_on
