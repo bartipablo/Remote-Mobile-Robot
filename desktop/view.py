@@ -305,8 +305,8 @@ class MainView(tk.Tk):
             if not self.robot.is_camera_turned_on():
                 self.__draw_pause_indicators()
 
-        if 'L' in pressed_keys:
-            print("PRESSED L")
+        if 'H' in pressed_keys:
+            self.robot.enable_buzzer()
 
         if 'Up' in pressed_keys:
             self.robot.speed_up()

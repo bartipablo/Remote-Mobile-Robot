@@ -48,3 +48,7 @@ class Robot:
             self.mqttc.publish("robot/camera/disconnect", get_ip_address(), qos=1)
 
         return self.__camera_turned_on
+
+    def enable_buzzer(self):
+        self.mqttc.publish("robot/control/buzzer", "on", qos=0)
+        
