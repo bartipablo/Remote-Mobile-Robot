@@ -22,6 +22,6 @@ class Buzzer:
         return self.enabled
     
     
-    def disable_if_time_expired(self, time):
-        if self.is_enabled() and time.ticks_diff(time.ticks_ms(), self.buzzer_start_time) >= time:
+    def disable_if_time_expired(self, expiried_time):
+        if self.is_enabled() and time.ticks_diff(time.ticks_ms(), self.buzzer_start_time) >= expiried_time:
             self.toggle_buzzer(False)
