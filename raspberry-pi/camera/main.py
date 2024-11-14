@@ -78,7 +78,7 @@ if __name__ == "__main__":
             ret, buffer = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 30])
 
             x_as_bytes = pickle.dumps(buffer)
-            for ipv4 in clients_ip:
+            for ipv4 in clients_ip.copy():
                 sock.sendto(x_as_bytes, (ipv4, CLIENT_SOCKET_PORT))
 
     except KeyboardInterrupt:
