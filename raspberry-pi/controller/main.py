@@ -30,4 +30,5 @@ if __name__ == "__main__":
     mqttc.on_message = on_message
     mqttc.connect(MQTT_IPv4, MQTT_PORT, 60)
     mqttc.user_data_set(robot)
-    mqttc.loop_start()
+    mqttc.loop_forever()
+
