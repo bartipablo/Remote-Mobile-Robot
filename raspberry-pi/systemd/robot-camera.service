@@ -1,0 +1,15 @@
+[Unit]
+Description=Video streaming from camera connected to raspberry pi.
+After=multi-user.target
+
+[Service]
+Type=simple
+
+ExecStart=/home/bartipablo/Remote-Mobile-Robot/raspberry-pi/camera/env/bin/python  /home/bartipablo/Remote-Mobile-Robot/raspberry-pi/camera/main.py
+
+Restart=always
+
+User=bartipablo
+
+[Install]
+WantedBy=multi-user.target
