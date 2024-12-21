@@ -12,8 +12,42 @@ def on_connect(client, userdata, flags, reason_code, properties):
 def on_message(client, userdata, msg):
     robot = userdata
 
-    if msg.topic == "robot/control/buzzer":
-        robot.enable_buzzer()
+    try:
+        if msg.topic == "robot/control/buzzer":
+            robot.enable_buzzer()
+
+        elif msg.topic == "robot/move/forward":
+            robot.move_forward(int(msg.payload))
+
+        elif msg.topic == "robot/move/backward":
+            robot.move_backward(int(msg.payload))
+
+        elif msg.topic == "robot/move/left":
+            robot.move_left(int(msg.payload))
+
+        elif msg.topic == "robot/move/right":
+            robot.move_right(int(msg.payload))
+
+        elif msg.topic == "robot/move/forward-left":
+            robot.move_forward_left(int(msg.payload))
+
+        elif msg.topic == "robot/move/forward-right":
+            robot.move_forward_right(int(msg.payload))
+
+        elif msg.topic == "robot/move/backward-left":
+            robot.move_backward_left(int(msg.payload))
+        
+        elif msg.topic == "robot/move/backward-right":
+            robot.move_backward_right(int(msg.payload))
+
+        elif msg.topic == "robot/move/rotate-left":
+            robot.rotate_left(int(msg.payload))
+
+        elif msg.topic == "robot/move/rotate-right":
+            robot.rotate_right(int(msg.payload))
+    except Exception as e:
+        print(f"Error during reading message from client.")
+        print("f Details: {e}")
 
 
 if __name__ == "__main__":
@@ -31,4 +65,3 @@ if __name__ == "__main__":
     mqttc.connect(MQTT_IPv4, MQTT_PORT, 60)
     mqttc.user_data_set(robot)
     mqttc.loop_forever()
-

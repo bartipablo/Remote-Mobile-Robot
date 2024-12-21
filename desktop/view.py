@@ -336,40 +336,40 @@ class MainView(tk.Tk):
             self.update_speed_label(self.robot.get_speed())
 
         if 'W' in pressed_keys and 'A' in pressed_keys:
-            print("PRESSED W and A")
+            self.robot.move_forward_left(self.robot.get_speed())
 
         elif 'W' in pressed_keys and 'D' in pressed_keys:
-            print("PRESSED W and D")
+            self.robot.move_forward_right(self.robot.get_speed())
 
         elif 'S' in pressed_keys and 'A' in pressed_keys:
-            print("PRESSED S and A")
+            self.robot.move_backward_left(self.robot.get_speed())
 
         elif 'S' in pressed_keys and 'D' in pressed_keys:
-            print("PRESSED S and D")
+            self.robot.move_backward_right(self.robot.get_speed())
 
         elif 'W' in pressed_keys and 'S' in pressed_keys:
-            print("PRESSED W and S")
+            return
 
         elif 'W' in pressed_keys:
-            print("PRESSED W")
+            self.robot.move_forward(self.robot.get_speed())
 
         elif 'A' in pressed_keys:
-            print("PRESSED A")
+            self.robot.move_left(self.robot.get_speed())
 
         elif 'S' in pressed_keys:
-            print("PRESSED S")
+            self.robot.move_backward(self.robot.get_speed())
 
         elif 'D' in pressed_keys:
-            print("PRESSED D")
+            self.robot.move_right(self.robot.get_speed())
 
         elif 'Left' in pressed_keys and 'Right' in pressed_keys:
-            print("PRESSED LEFT and RIGHT")
+            return
 
         elif 'Left' in pressed_keys:
-            print("PRESSED LEFT")
+            self.robot.rotate_left(self.robot.get_speed())
 
         elif 'Right' in pressed_keys:
-            print("PRESSED RIGHT")
+            self.robot.rotate_right(self.robot.get_speed())
 
 
 def make_button_label(key, parent):
