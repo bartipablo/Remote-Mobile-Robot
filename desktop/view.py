@@ -16,6 +16,7 @@ class MainView(tk.Tk):
         self.battery_bar_labels = {}
         self.speed_label = None
         self.image_canvas = None
+        self.battery_level_label = None 
 
         self.pressed_keys = set()
 
@@ -30,6 +31,7 @@ class MainView(tk.Tk):
 
         self.__signal_scheduler()
         self.__battery_scheduler()
+        self.__image_scheduler()
 
         self.bind("<KeyPress>", self.__on_key_press)
         self.bind("<KeyRelease>", self.__on_key_release)
@@ -65,11 +67,20 @@ class MainView(tk.Tk):
 
     def __signal_scheduler(self):
         self.__update_signal_strength()
-        self.after(1000, self.__signal_scheduler)
+        self.after(500, self.__signal_scheduler)
 
     def __battery_scheduler(self):
         self.__update_battery_lvl()
-        self.after(15000, self.__battery_scheduler)
+        self.after(500, self.__battery_scheduler)
+
+    def __image_scheduler(self):
+        self.__image_area_garbage_collector()
+        self.after(1000, self.__image_scheduler)
+
+    def __image_area_garbage_collector(self):
+        if not self.robot.is_camera_turned_on():
+            self.__clear_image_area()
+            self.__draw_pause_indicators()
 
     def __update_signal_strength(self):
         def update_signal_bar(color):
@@ -99,24 +110,27 @@ class MainView(tk.Tk):
             for i in range(1, 6):
                 self.battery_bar_labels[i].config(bg=color)
 
-        battery_lvl = self.robot.get_battery_lvl()
+        battery_lvl = self.robot.get_battery_voltage()
 
         if battery_lvl is None:
             for i in range(1, 6):
                 update_battery_bar("#555555")
         else:
+            # 9.6 - 12.6 V
             update_battery_bar("white")
-            if battery_lvl >= 80:
+            if battery_lvl >= 12:
                 self.battery_bar_labels[5].config(bg="green")
-            if battery_lvl >= 60:
+            if battery_lvl >= 11.4:
                 self.battery_bar_labels[4].config(bg="green")
-            if battery_lvl >= 40:
+            if battery_lvl >= 10.8:
                 self.battery_bar_labels[3].config(bg="green")
-            if battery_lvl >= 20:
+            if battery_lvl >= 10.2:
                 self.battery_bar_labels[2].config(bg="green")
                 self.battery_bar_labels[1].config(bg="green")
-            if battery_lvl < 20:
+            if battery_lvl < 10.2:
                 self.battery_bar_labels[1].config(bg="red")
+
+            self.battery_level_label.config(text=f"{battery_lvl:.2f} [V]")
 
     def __draw_manual(self):
         manual_frame = tk.Frame(self, width=250, height=600, bg="#343036")
@@ -259,6 +273,11 @@ class MainView(tk.Tk):
             width=1, height=1, relief="raised", borderwidth=1
         )
         addition_battery_label.grid(row=0, column=6, padx=1, pady=5)
+
+        self.battery_level_label = tk.Label(
+            battery_level_frame, text="- [V]", font=("Arial", 14, "bold"), fg="white", bg="#343036"
+        )
+        self.battery_level_label.grid(row=1, column=0, columnspan=6, pady=5)
 
     def __draw_speed(self, frame):
         speed_label = tk.Label(frame, text="Speed:", font=("Arial", 14, "bold"), fg="white", bg="#343036")

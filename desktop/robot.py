@@ -2,24 +2,18 @@ from utils import get_wifi_signal_strength
 from utils import get_ip_address
 
 class Robot:
-    def __init__(self, mqttc):
-        self.__battery_lvl = 19
+    def __init__(self):
+        self.__battery_lvl = None
         self.__speed = 1
         self.__camera_turned_on = False
+
+    def set_mqtt_client(self, mqttc):
         self.mqttc = mqttc
 
-    def set_battery_lvl(self, battery_lvl):
-        if battery_lvl < 0:
-            self.__battery_lvl = 0
-            return
-
-        if battery_lvl > 100:
-            self.__battery_lvl = 100
-            return
-
+    def set_battery_voltage(self, battery_lvl):
         self.__battery_lvl = battery_lvl
 
-    def get_battery_lvl(self):
+    def get_battery_voltage(self):
         return self.__battery_lvl
 
     def speed_up(self):
@@ -42,10 +36,11 @@ class Robot:
     def switch_camera(self):
         self.__camera_turned_on = not self.__camera_turned_on
 
-        if self.__camera_turned_on:
-            self.mqttc.publish("robot/camera/connect", get_ip_address(), qos=1)
-        else:
-            self.mqttc.publish("robot/camera/disconnect", get_ip_address(), qos=1)
+        if self.mqttc:
+            if self.__camera_turned_on:
+                self.mqttc.publish("robot/camera/connect", get_ip_address(), qos=1)
+            else:
+                self.mqttc.publish("robot/camera/disconnect", get_ip_address(), qos=1)
 
         return self.__camera_turned_on
 

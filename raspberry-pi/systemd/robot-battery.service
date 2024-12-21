@@ -1,0 +1,15 @@
+[Unit]
+Description=Meassure battery power level.
+After=multi-user.target
+
+[Service]
+Type=simple
+
+ExecStart=/home/bartipablo/Remote-Mobile-Robot/raspberry-pi/battery/env/bin/python  /home/bartipablo/Remote-Mobile-Robot/raspberry-pi/battery/main.py
+
+Restart=always
+
+User=bartipablo
+
+[Install]
+WantedBy=multi-user.target
