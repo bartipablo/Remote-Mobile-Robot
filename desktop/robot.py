@@ -4,7 +4,7 @@ from utils import get_ip_address
 class Robot:
     def __init__(self):
         self.__battery_lvl = None
-        self.__speed = 1
+        self.__speed = 10
         self.__camera_turned_on = False
 
     def set_mqtt_client(self, mqttc):

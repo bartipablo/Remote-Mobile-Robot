@@ -7,6 +7,16 @@ from robot import Robot
 def on_connect(client, userdata, flags, reason_code, properties):
     print(f"Connected to MQTT broker with result code {reason_code}")
     client.subscribe("robot/control/buzzer", qos=0)
+    client.subscribe("robot/move/forward", qos=0)
+    client.subscribe("robot/move/backward", qos=0)
+    client.subscribe("robot/move/left", qos=0)
+    client.subscribe("robot/move/right", qos=0)
+    client.subscribe("robot/move/forward-left", qos=0)
+    client.subscribe("robot/move/forward-right", qos=0)
+    client.subscribe("robot/move/backward-left", qos=0)
+    client.subscribe("robot/move/backward-right", qos=0)
+    client.subscribe("robot/move/rotate-left", qos=0)
+    client.subscribe("robot/move/rotate-right", qos=0)
 
 
 def on_message(client, userdata, msg):

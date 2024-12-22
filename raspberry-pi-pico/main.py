@@ -2,6 +2,7 @@ import time
 import _thread
 import re
 
+import machine
 from machine import UART, Pin, ADC, PWM
 from devices import Buzzer, VoltageMeter, Motor, DriveTrain
 
@@ -52,13 +53,14 @@ voltage_meter = VoltageMeter(pin_voltage_meter)
 
 
 def message_handling(message):
+    message_string = message.decode('utf-8')
 
-    if message == b"/buzzer\n":
+    if message_string == "/buzzer\n":
         buzzer.toggle_buzzer(True)
 
-    move_match = re.match(rb"/move{(w|s|a|d|wa|wd|sa|sd,rl,rr),([1-9][0-9]?|100)}\n", message)
+    move_match = re.match("/move{(w|s|a|d|wa|wd|sa|sd|rl|rr),([1-9][0-9]?|100)}\n", message_string)
     if move_match:
-        direction = move_match.group(1).decode('utf-8')
+        direction = move_match.group(1)
         speed = int(move_match.group(2))
 
         if direction == "w":
@@ -119,3 +121,5 @@ except:
         LED.toggle()
         time.sleep(0.5)
     LED.value(0)    
+
+    machine.reset()

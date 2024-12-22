@@ -286,7 +286,7 @@ class MainView(tk.Tk):
         speed_frame = tk.Frame(frame, bg="#343036")
         speed_frame.pack(pady=0)
 
-        self.speed_label = tk.Label(speed_frame, text="1", font=("Arial", 20, "bold"), fg="white", bg="#343036")
+        self.speed_label = tk.Label(speed_frame, text="10", font=("Arial", 20, "bold"), fg="white", bg="#343036")
         self.speed_label.grid(row=0, column=0, padx=5, pady=5)
         
 
