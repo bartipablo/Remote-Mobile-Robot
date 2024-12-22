@@ -9,7 +9,7 @@
 ### Control Software
 ![Robot](/assets/app.png)
 
-### Funkcjonalności
+### Features
 
 ##### Access Point
 The robot provides an autonomous Wi-Fi access point. To control the robot, you need to connect to its network.
