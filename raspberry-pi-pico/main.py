@@ -26,15 +26,15 @@ left_back_motor_pwm_pin.freq(1000)
 left_back_motor_forward_pin = Pin(6, Pin.OUT)
 left_back_motor_backward_pin = Pin(5, Pin.OUT)
 
-right_front_motor_pwm_pin = PWM(Pin(13))
+right_front_motor_pwm_pin = PWM(Pin(8))
 right_front_motor_pwm_pin.freq(1000)
-right_front_motor_forward_pin = Pin(12, Pin.OUT)
-right_front_motor_backward_pin = Pin(11, Pin.OUT)
+right_front_motor_forward_pin = Pin(10, Pin.OUT)
+right_front_motor_backward_pin = Pin(9, Pin.OUT)
 
-right_back_motor_pwm_pin = PWM(Pin(8))
+right_back_motor_pwm_pin = PWM(Pin(13))
 right_back_motor_pwm_pin.freq(1000)
-right_back_motor_forward_pin = Pin(10, Pin.OUT)
-right_back_motor_backward_pin = Pin(9, Pin.OUT)
+right_back_motor_forward_pin = Pin(12, Pin.OUT)
+right_back_motor_backward_pin = Pin(11, Pin.OUT)
 # HARDWARE CONFIGURATION
 
 
@@ -95,7 +95,7 @@ def message_handling(message):
 
 def device_handling():
     buzzer.disable_if_time_expired(600)
-    drive_train.stop_if_time_expired(400)
+    drive_train.stop_if_time_expired(300)
 
 
 def transmit_read_voltage_task():

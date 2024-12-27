@@ -18,11 +18,11 @@ class Robot:
 
     def speed_up(self):
         if self.get_speed() < 100:
-            self.__speed += 10
+            self.__speed += 5
 
     def speed_down(self):
         if self.get_speed() > 10:
-            self.__speed -= 10
+            self.__speed -= 5
 
     def get_speed(self):
         return self.__speed

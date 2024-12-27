@@ -64,7 +64,6 @@ class MainView(tk.Tk):
         self.image_canvas.create_image(0, 0, anchor="nw", image=img_tk)
         self.image_canvas.image = img_tk 
 
-
     def __signal_scheduler(self):
         self.__update_signal_strength()
         self.after(500, self.__signal_scheduler)
